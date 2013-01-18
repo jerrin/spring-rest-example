@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<import resource="restsample-oxm.xml" />
+	<context:component-scan base-package="com.restsample.exercise"
+		annotation-config="true" />
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<util:list>
+				<ref bean="marshallingHttpMessageConverter" />
+			</util:list>
+		</property>
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver">
+		<property name="messageConverters">
+			<util:list>
+				<ref bean="marshallingHttpMessageConverter" />
+			</util:list>
+		</property>
+	</bean>
+	
+	<bean id="marshallingHttpMessageConverter"
+		class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+		<property name="marshaller" ref="jaxbMarshaller"/>
+		<property name="unmarshaller" ref="jaxbMarshaller"/>
+		<property name="supportedMediaTypes">
+			<list>
+				<bean class="org.springframework.http.MediaType">
+					<constructor-arg index="0" value="application" />
+					<constructor-arg index="1" value="xml" />
+					<constructor-arg index="2" value="UTF-8" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>
